@@ -9,10 +9,6 @@ if [ "$IS_MACOS" = "true" ]; then
     export PYTORCH_ENABLE_MPS_FALLBACK=1
 else
    echo "Using standard Linux configuration"
-#   if [ "$USE_CUDA_118" = "true" ]; then
-#      echo "Using CUDA 118"
-#      export TORCH_COMMAND="pip install torch==2.1.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118"
-#   fi
    if [ "$USE_CUDA_121" = "true" ]; then
       echo "Using CUDA 121"
       export TORCH_COMMAND="pip install torch==2.1.0+cu121 --extra-index-url https://download.pytorch.org/whl/cu121"

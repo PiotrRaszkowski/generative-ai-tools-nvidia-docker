@@ -1,0 +1,63 @@
+version: '3.8'
+
+services:
+  automatic1111:
+    container_name: automatic1111-nvidia-docker
+    image: piotrraszkowski/automatic1111-nvidia-docker:latest
+    restart: always
+    build:
+      context: ./automatic1111/
+    ports:
+      - "7860:7860"
+    environment:
+      - IS_MACOS=false
+      - USE_CUDA_121=true
+      - USE_XFORMERS=true
+      - CUDA_MODULE_LOADING=LAZY
+    volumes:
+      - stable-diffusion-webui:/home/automatic1111/stable-diffusion-webui
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
+  kohya_ss:
+    container_name: kohya_ss-nvidia-docker
+    image: piotrraszkowski/kohya_ss-nvidia-docker:latest
+    restart: always
+    build:
+      context: ./kohya_ss/
+    ports:
+      - "7861:7860"
+    volumes:
+      - kohya_ss:/home/appuser/kohya_ss
+      - /tmp/.X11-unix:/tmp/.X11-unix
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              device_ids: ['all']
+              capabilities: [gpu]
+  facefusion:
+    container_name: facefusion-nvidia-docker
+    image: piotrraszkowski/facefusion-nvidia-docker:latest
+    restart: always
+    build:
+      context: ./facefusion/
+    ports:
+      - "7862:7860"
+    volumes:
+      - facefusion:/home/appuser/facefusion
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu, video ]
+
+volumes:
+  stable-diffusion-webui:
+  kohya_ss:
+  facefusion:
