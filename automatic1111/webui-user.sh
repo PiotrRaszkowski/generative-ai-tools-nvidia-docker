@@ -1,18 +1,21 @@
 #!/bin/bash
-export COMMANDLINE_ARGS="$COMMANDLINE_ARGS --enable-insecure-extension-access --listen --medvram --no-half-vae"
+# https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Optimum-SDXL-Usage
+# https://github.com/AUTOMATIC1111/stable-diffusion-webui/wiki/Optimizations
+
+export COMMANDLINE_ARGS="$COMMANDLINE_ARGS --enable-insecure-extension-access --listen"
+
+if [ "IS_LOWVRAM" == "true" ]; then
+  export COMMANDLINE_ARGS="$COMMANDLINE_ARGS --lowvram --opt-split-attention"
+elif [ "IS_MEDVRAM" == "true" ]; then
+  export COMMANDLINE_ARGS="$COMMANDLINE_ARGS --medvram"
+fi
+
 export LD_PRELOAD=libtcmalloc.so
 
-if [ "$IS_MACOS" = "true" ]; then
-    echo "Using MacOS configuration"
-    export COMMANDLINE_ARGS="$COMMANDLINE_ARGS --skip-torch-cuda-test --no-half --upcast-sampling --no-half-vae --use-cpu interrogate"
-    export TORCH_COMMAND="pip install torch==2.1.0 torchvision==0.16.0"
-    export PYTORCH_ENABLE_MPS_FALLBACK=1
-else
-   echo "Using standard Linux configuration"
-   if [ "$USE_CUDA_121" = "true" ]; then
-      echo "Using CUDA 121"
-      export TORCH_COMMAND="pip install torch==2.1.0+cu121 --extra-index-url https://download.pytorch.org/whl/cu121"
-   fi
+echo "Using standard Linux configuration"
+if [ "$USE_CUDA_118" = "true" ]; then
+  echo "Using CUDA 118"
+  export TORCH_COMMAND="pip install torch==2.1.0+cu118 --extra-index-url https://download.pytorch.org/whl/cu118"
 fi
 
 if [ "$USE_XFORMERS" = "true" ]; then
@@ -21,3 +24,5 @@ if [ "$USE_XFORMERS" = "true" ]; then
 else 
    echo "Not using XFormers" 
 fi
+
+echo "Command line args = ${COMMANDLINE_ARGS}"

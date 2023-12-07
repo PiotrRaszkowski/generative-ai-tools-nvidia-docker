@@ -1,21 +1,24 @@
 version: '3.8'
 
 services:
-  automatic1111:
+  automatic1111.v1.6:
     container_name: automatic1111-nvidia-docker
     image: piotrraszkowski/automatic1111-nvidia-docker:latest
     restart: always
     build:
       context: ./automatic1111/
+      args:
+        AUTOMATIC1111_VERSION: "v1.6.1"
     ports:
       - "7860:7860"
     environment:
-      - IS_MACOS=false
-      - USE_CUDA_121=true
+      - USE_CUDA_118=true
       - USE_XFORMERS=true
-      - CUDA_MODULE_LOADING=LAZY
+      - IS_LOWVRAM=true
     volumes:
       - stable-diffusion-webui:/home/automatic1111/stable-diffusion-webui
+    mem_reservation: "256M"
+    mem_limit: "8G"
     deploy:
       resources:
         reservations:
@@ -40,16 +43,40 @@ services:
             - driver: nvidia
               device_ids: ['all']
               capabilities: [gpu]
-  facefusion:
+  facefusion.v1:
     container_name: facefusion-nvidia-docker
     image: piotrraszkowski/facefusion-nvidia-docker:latest
     restart: always
     build:
+      args:
+        FACEFUSION_VERSION: "1.3.0"
       context: ./facefusion/
+      dockerfile: Dockerfile
     ports:
       - "7862:7860"
     volumes:
-      - facefusion:/home/appuser/facefusion
+      - facefusion.v2:/home/appuser/facefusion
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu, video ]
+  facefusion.v2:
+    container_name: facefusion-nvidia-docker
+    image: piotrraszkowski/facefusion-nvidia-docker:latest
+    restart: always
+    build:
+      args:
+        FACEFUSION_VERSION: "2.0.0"
+      context: ./facefusion/
+      dockerfile: facefusion/Dockerfile
+    ports:
+      - "7862:7860"
+    volumes:
+      - facefusion.v2:/home/appuser/facefusion
+    mem_reservation: "256M"
+    mem_limit: "8G"
     deploy:
       resources:
         reservations:
@@ -60,4 +87,4 @@ services:
 volumes:
   stable-diffusion-webui:
   kohya_ss:
-  facefusion:
+  facefusion.v2:
