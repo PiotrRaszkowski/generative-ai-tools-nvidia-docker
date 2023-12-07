@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  automatic1111.v1.6:
+    container_name: automatic1111-nvidia-docker
+    image: piotrraszkowski/automatic1111-nvidia-docker:latest
+    restart: always
+    build:
+      context: .
+      args:
+        AUTOMATIC1111_VERSION: "v1.6.1"
+    ports:
+      - "7860:7860"
+    environment:
+      - USE_CUDA_118=true
+      - USE_XFORMERS=true
+      - IS_LOWVRAM=true
+    volumes:
+      - automatic1111_data:/home/appuser/stable-diffusion-webui
+    mem_reservation: "256M"
+    mem_limit: "8G"
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              capabilities: [ gpu ]
+volumes:
+  automatic1111_data:
+    external: true

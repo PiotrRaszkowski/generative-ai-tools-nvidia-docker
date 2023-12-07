@@ -10,7 +10,7 @@ RUN apt install -y python3.10-dev python3.10-tk python3-html5lib python3-apt pyt
 RUN apt install -y python-is-python3
 RUN apt install -y pip
 
-FROM python3.10-base as automatic1111
+FROM python3.10-base as automatic1111vo
 
 ARG AUTOMATIC1111_VERSION=v1.6.1
 
@@ -35,8 +35,6 @@ RUN git clone https://github.com/AUTOMATIC1111/stable-diffusion-webui --branch $
 
 VOLUME /home/appuser/stable-diffusion-webui
 WORKDIR /home/appuser/stable-diffusion-webui
-
-ADD webui-user.sh .
 
 # Models
 WORKDIR /home/appuser/stable-diffusion-webui/models/Stable-diffusion
@@ -163,6 +161,8 @@ RUN wget --content-disposition 'https://huggingface.co/hotshotco/Hotshot-XL/reso
 RUN ls -lha
 
 WORKDIR /home/appuser/stable-diffusion-webui
+
+ADD webui-user.sh .
 
 ENV IS_LOWVRAM true
 ENV IS_MEDVRAM false

@@ -1,26 +1,29 @@
+# System and Hardware Requirements
+1. x86_64/amd64 architecture
+2. Ubuntu 22.04 Server Installed.
+3. Nvidia Graphics Card (tested on 1060 6GB VRam).
+4. Recommended is more than 200 GB available for your docker volumes.
+
+# Prerequisites
+1. Install Docker on your host machine: https://docs.docker.com/engine/install/ubuntu/.
+2. Install CUDA and Nvidia drivers on your host machine: https://www.cherryservers.com/blog/install-cuda-ubuntu.
+   1. Tested and optimized for CUDA 11.8.
+   2. Tested with Nvidia Drivers version 545.
+3. Clone this repository.
+
 # Installation guide
 
-## System and Hardware Requirements
-1. x86_64/amd64 architecture
-1. Ubuntu 22.04 Server Installed.
-1. Nvidia Graphics Card (tested on 1060 6GB VRam).
-
-## Prerequisites
-1. Install Docker on your host machine: https://docs.docker.com/engine/install/ubuntu/.
-1. Install CUDA and Nvidia drivers on your host machine: https://www.cherryservers.com/blog/install-cuda-ubuntu.
-   1. Tested and optimized for CUDA 11.8.
-   1. Tested with Nvidia Drivers version 545.
-1. Clone this repository.
-
-## Installation
-
-### AUTOMATIC1111
+## AUTOMATIC1111
 https://github.com/AUTOMATIC1111/stable-diffusion-webui
 
-1. Run `docker compose build automatic1111.v1.6`.
-1. Run `docker compose up automatic1111 -d`.
+1. Go to automatic1111 subdirectory: `cd automatic1111`.
+2. Run `docker compose build automatic1111.v1.6`.
+3. Create a volume (100 GB free space is recommended):
+   - if you want to place your data in a dedicated location: `docker volume create --driver local --opt type=none --opt device=[YOUR_AUTOMATIC1111_DATA_LOCATION] --opt o=bind automatic1111_data`
+   - or use the default location: `docker volume create automatic1111_data`
+4. Run `docker compose up automatic1111.v1.6 -d`.
 
-Automatic1111 should be available: http://127.0.0.1:7860, docker will limit RAM usage to 8GB.
+Automatic1111 should be available at http://127.0.0.1:7860, docker will limit RAM usage to 8GB.
 
 Build and run take a while... depending on your network speed, at the end you will have:
 - Docker Image created.
@@ -43,41 +46,42 @@ Pre-installed plugins:
 6. posex
 7. stable-diffusion-webui-images-browser
 
-#### Customization
+### Customization
 
-##### Environment settings
+#### Environment settings
 You can customize your container by setting the following env variables:
-- IS_LOWVRAM=true/false -> if set to true IS_MEDVRAM will be ignored, adds: --lowvram --opt-split-attention
-- IS_MEDVRAM=true/false -> adds: --medvram
-- USE_XFORMERS=true/false -> adds: --xformers
-- USE_CUDA_118=true/false -> installs torch optimized for CUDA 11.8
 
-Default ENV settings:
-- IS_LOWVRAM=true
-- IS_MEDVRAM=false
-- USE_XFORMERS=true
-- USE_CUDA_118=true
+| Environment Variable | Values     | Default | Description                                                                      |
+|----------------------|------------|---------|----------------------------------------------------------------------------------|
+| IS_LOWVRAM           | true/false | true    | if set to true IS_MEDVRAM will be ignored, adds: --lowvram --opt-split-attention |
+| IS_MEDVRAM           | true/false | false   | adds: --medvram                                                                  |
+| USE_XFORMERS         | true/false | true    | adds: --xformers                                                                 |
+| USE_CUDA_118         | true/false | true    | installs torch optimized for CUDA 11.8                                           |
 
-##### Memory settings
+#### Memory settings
 Default memory limit is set to 8 GB. If you want to change it you can manipulate on mem_reservation and mem_limit options from docker-compose.yml.
 
-### FaceFusion
-https://github.com/facefusion/facefusion
-
-1. Run `docker compose build facefusion.v2`.
-1. Run `docker compose up facefusion -d`.
-
-FaceFusion 2.X should be available: http://127.0.0.1:7862, docker will limit RAM usage to 8GB.
-
-#### Customization
-
-##### Memory settings
-Default memory limit is set to 8 GB. If you want to change it you can manipulate on mem_reservation and mem_limit options from docker-compose.yml.
-
-### Kohya_SS - IN PROGRESS.
+## Kohya_SS - IN PROGRESS.
 https://github.com/bmaltais/kohya_ss
 
-## Usefull links
+## FaceFusion V2
+https://github.com/facefusion/facefusion
+
+1. Go to facefusion subdirectory: `cd facefusion`.
+2. Run `docker compose build facefusion.v2`.
+3. Create a volume:
+   - if you want to place your data in a dedicated location: `docker volume create --driver local --opt type=none --opt device=[YOUR_FACEFUSION_DATA_LOCATION] --opt o=bind facefusion_v2_data`
+   - or use the default location: `docker volume create facefusion_v2_data`
+4. Run `docker compose up facefusion.v2 -d`.
+
+FaceFusion 2.X should be available at http://127.0.0.1:7862, docker will limit RAM usage to 8GB.
+
+### Customization
+
+#### Memory settings
+Default memory limit is set to 8 GB. If you want to change it you can manipulate on mem_reservation and mem_limit options from docker-compose.yml.
+
+# Usefull links
 - https://github.com/AUTOMATIC1111/stable-diffusion-webui
 - https://github.com/facefusion/facefusion
 - https://github.com/bmaltais/kohya_ss

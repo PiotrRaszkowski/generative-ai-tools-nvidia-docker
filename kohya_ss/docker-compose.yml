@@ -1,0 +1,21 @@
+version: '3.8'
+
+services:
+#  kohya_ss:
+#    container_name: kohya_ss-nvidia-docker
+#    image: piotrraszkowski/kohya_ss-nvidia-docker:latest
+#    restart: always
+#    build:
+#      context: ./kohya_ss/
+#    ports:
+#      - "7861:7860"
+#    volumes:
+#      - kohya_ss:/home/appuser/kohya_ss
+#      - /tmp/.X11-unix:/tmp/.X11-unix
+#    deploy:
+#      resources:
+#        reservations:
+#          devices:
+#            - driver: nvidia
+#              device_ids: ['all']
+#              capabilities: [gpu]
