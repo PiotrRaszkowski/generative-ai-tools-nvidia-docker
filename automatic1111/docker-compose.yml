@@ -14,11 +14,12 @@ services:
     environment:
       - USE_CUDA_118=true
       - USE_XFORMERS=true
-      - IS_LOWVRAM=true
+      - IS_LOWVRAM=false
+      - IS_MEDVRAM=true
     volumes:
       - automatic1111_data:/home/appuser/stable-diffusion-webui
     mem_reservation: "256M"
-    mem_limit: "8G"
+    mem_limit: "16G"
     deploy:
       resources:
         reservations:

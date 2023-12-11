@@ -40,19 +40,22 @@ WORKDIR /home/appuser/stable-diffusion-webui
 WORKDIR /home/appuser/stable-diffusion-webui/models/Stable-diffusion
 
 # epiCPhotoGasm - Last Unicorn
-RUN wget --content-disposition 'https://civitai.com/api/download/models/223670?type=Model&format=SafeTensor&size=pruned&fp=fp16'
+RUN wget --content-disposition 'https://huggingface.co/reszkapl/reszkaplmodels/resolve/main/epicphotogasm_lastUnicorn.safetensors?download=true'
 
 # Realistic Vision V6.0 B1 - V6.0 B1 (VAE)
-RUN wget --content-disposition 'https://civitai.com/api/download/models/245598?type=Model&format=SafeTensor&size=full&fp=fp16'
+RUN wget --content-disposition 'https://huggingface.co/reszkapl/reszkaplmodels/resolve/main/realisticVisionV60B1_v60B1VAE.safetensors?download=true'
 
 # RunDiffusionXL - beta
-RUN wget --content-disposition 'https://civitai.com/api/download/models/131579?type=Model&format=SafeTensor&size=full&fp=fp16'
+RUN wget --content-disposition 'https://huggingface.co/reszkapl/reszkaplmodels/resolve/main/rundiffusionXL_beta.safetensors?download=true'
 
 # Juggernaut XL - V7 + RunDiffusion
-RUN wget --content-disposition 'https://civitai.com/api/download/models/240840?type=Model&format=SafeTensor&size=full&fp=fp16'
+RUN wget --content-disposition 'https://huggingface.co/reszkapl/reszkaplmodels/resolve/main/juggernautXL_v7Rundiffusion.safetensors?download=true'
 
 # RealLife - v3.0
-RUN wget --content-disposition 'https://civitai.com/api/download/models/250020?type=Model&format=SafeTensor&size=pruned&fp=fp16'
+RUN wget --content-disposition 'https://huggingface.co/reszkapl/reszkaplmodels/resolve/main/reallife_v30.safetensors?download=true'
+
+# RealCartoon-XL - v5
+RUN wget --content-disposition 'https://huggingface.co/reszkapl/reszkaplmodels/resolve/main/realcartoonXL_v5.safetensors?download=true'
 
 RUN ls -lha
 
@@ -80,6 +83,15 @@ RUN git clone https://github.com/hnmr293/posex
 
 # stable-diffusion-webui-images-browser
 RUN git clone https://github.com/AlUlkesh/stable-diffusion-webui-images-browser
+
+# Reactor (Face Swap)
+RUN git clone https://github.com/Gourieff/sd-webui-reactor.git
+
+# Roop (Face Swap)
+RUN git clone https://github.com/s0md3v/sd-webui-roop.git
+
+# SD WebUI Aspect Ratio Helper
+RUN git clone https://github.com/thomasasfk/sd-webui-aspect-ratio-helper.git
 
 #Control Net models
 WORKDIR /home/appuser/stable-diffusion-webui/extensions/sd-webui-controlnet/models
@@ -176,7 +188,7 @@ ENV PATH="./venv/bin:$PATH"
 
 RUN pip install --upgrade pip
 
-RUN pip install -U xformers --index-url https://download.pytorch.org/whl/cu118
+#RUN pip install -U xformers --index-url https://download.pytorch.org/whl/cu118
 
 EXPOSE 7860
 ENTRYPOINT [ "./webui.sh" ]
